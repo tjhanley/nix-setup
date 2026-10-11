@@ -1,0 +1,80 @@
+# nix-setup
+
+Nix + home-manager setup for Linux hosts, the counterpart of
+[mac-setup](https://github.com/tjhanley/mac-setup). Same shell, prompt, git and
+CLI tooling, same Catppuccin Mocha theming, declared in a flake instead of
+Homebrew + Stow.
+
+Target: `coder@x86_64-linux` (Ubuntu VM host). Login shell stays bash; interactive
+bash hands off to zsh (see below).
+
+## Quick start
+
+```sh
+git clone https://github.com/tjhanley/nix-setup ~/Workspace/nix-setup
+cd ~/Workspace/nix-setup
+./setup.sh --dry-run   # preview
+./setup.sh
+```
+
+`setup.sh` installs Nix (multi-user, needs sudo) if missing, enables flakes, then
+runs `home-manager switch --flake .#coder -b bak`. Pre-existing dotfiles are kept
+as `*.bak`. After the first run, `hms` (zsh function) re-applies the repo.
+
+## Defaults worth knowing
+
+| Option | Default | Effect |
+|--------|---------|--------|
+| `setup.zellijAutostart` | `false` | zellij is installed and configured but never started automatically. Set `true` in `home/default.nix` to `exec zellij` from interactive zsh (`NO_AUTO_ZELLIJ=1` opts out per shell). |
+| `setup.zshHandoff` | `true` | Appends a guarded `exec zsh` block to `~/.bashrc` (existing content kept). `NO_AUTO_ZSH=1 bash` stays in bash. |
+
+zsh is the shell on this host in practice, but the account's login shell is bash
+and zsh is not installed by apt. Rather than `chsh` to a nix path (needs an
+`/etc/shells` entry), bash hands off to the nix zsh.
+
+## Layout
+
+```
+flake.nix               inputs (nixpkgs unstable, home-manager), homeConfigurations.coder, checks
+setup.sh                bootstrap (install nix, enable flakes, switch)
+home/
+  default.nix           imports + user/home/stateVersion
+  packages.nix          CLI tools (mac-setup Brewfile equivalents)
+  zsh.nix               programs.zsh, plugins, zellijAutostart option
+  zsh/zshrc.zsh         the zshrc, adapted from mac-setup
+  git.nix               git config (identity stays in ~/.gitconfig.local)
+  files.nix             config files linked into ~/.config, bat theme
+  shell-handoff.nix     bash -> zsh handoff
+config/                 vendored app configs (starship, eza, lazygit, yazi, mise, zellij, ripgrep, git ignore)
+```
+
+## mac-setup mapping
+
+| mac-setup | here |
+|-----------|------|
+| Brewfile CLI tools | `home/packages.nix` |
+| `stow/zsh/.zshrc` | `home/zsh/zshrc.zsh` + `home/zsh.nix` |
+| `stow/git/.gitconfig` | `home/git.nix` |
+| stow packages bat, eza, lazygit, ripgrep, starship, yazi, mise | `home/files.nix` + `config/` |
+| `stow/zellij` | minimal `config/zellij/config.kdl` (built-in `catppuccin-mocha`) |
+| `~/.mac-setup.local` feature flags | Nix options under `setup.*` |
+
+Not ported (macOS-only or host-specific): ghostty, karabiner, skhd, zed, obsidian,
+ssh (1Password agent), the zjstatus bar and its macOS scripts, the zellij nav
+plugins, LazyVim bootstrap and nvim overrides, Dashlane `refresh-secrets`,
+caffeinate helpers, Homebrew, fonts, AI-tool configs (claude, pi, opencode).
+Neovim is installed but unconfigured.
+
+Host-specific state stays out of the repo: git identity in `~/.gitconfig.local`
+(the existing `~/.gitconfig` keeps working), secrets in `~/.secrets`.
+
+## Development
+
+```sh
+nix flake check                                   # includes the zellij-autostart checks
+nix build .#homeConfigurations.coder.activationPackage
+```
+
+Verified in a `nixos/nix` container (evaluation, build, activation twice for
+idempotence, zsh startup with `TERM_PROGRAM=ghostty` leaves `$ZELLIJ` unset).
+Not yet applied to this host.

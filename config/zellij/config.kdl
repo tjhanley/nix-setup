@@ -1,0 +1,6 @@
+theme "catppuccin-mocha"
+default_shell "zsh"
+pane_frames false
+copy_on_select true
+show_startup_tips false
+show_release_notes false
