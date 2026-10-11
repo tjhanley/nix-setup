@@ -58,6 +58,7 @@ config/                 vendored app configs (starship, eza, lazygit, yazi, mise
 | stow packages bat, eza, lazygit, ripgrep, starship, yazi, mise | `home/files.nix` + `config/` |
 | `stow/zellij` | minimal `config/zellij/config.kdl` (built-in `catppuccin-mocha`) |
 | `~/.mac-setup.local` feature flags | Nix options under `setup.*` |
+| `~/.bashrc` TERM export and `claude` intake wrapper | `home/zsh/zshrc.zsh` |
 
 Not ported (macOS-only or host-specific): ghostty, karabiner, skhd, zed, obsidian,
 ssh (1Password agent), the zjstatus bar and its macOS scripts, the zellij nav
@@ -77,4 +78,4 @@ nix build .#homeConfigurations.coder.activationPackage
 
 Verified in a `nixos/nix` container (evaluation, build, activation twice for
 idempotence, zsh startup with `TERM_PROGRAM=ghostty` leaves `$ZELLIJ` unset).
-Not yet applied to this host.
+Applied to the `coder` VM host.

@@ -197,6 +197,20 @@ alias awsdevx='aws sso login --profile devx-platform-dev'
 # Apply this repo to the host
 hms() { home-manager switch --flake "${NIX_SETUP_DIR:-$HOME/Workspace/nix-setup}#coder" "$@"; }
 
+# Carried over from ~/.bashrc
+export TERM=xterm-256color
+
+# Bare `claude` in a terminal runs the session-intake step first (claude-kb)
+claude() {
+  local py="$HOME/.local/share/mise/installs/python/3.14/bin/python3"
+  [[ -x "$py" ]] || py=python3
+  if [[ $# -eq 0 && -t 0 && -t 1 && -z "${INTAKE_OFF:-}" && -f "$HOME/claude-kb/bin/session-intake.py" ]]; then
+    "$py" "$HOME/claude-kb/bin/session-intake.py"
+  else
+    command claude "$@"
+  fi
+}
+
 # Machine-specific secrets and overrides (not tracked in git)
 if [[ -f "$HOME/.secrets" ]]; then
   source "$HOME/.secrets"
