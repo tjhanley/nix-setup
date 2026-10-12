@@ -31,7 +31,9 @@
 
     # Editor and terminal
     neovim
-    screen
+    (screen.overrideAttrs (old: {
+      configureFlags = old.configureFlags ++ [ "--with-system_screenrc=/dev/null" ];
+    }))
     tree-sitter
     zellij
 

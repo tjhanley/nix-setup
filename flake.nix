@@ -18,6 +18,7 @@
         modules = [ ./home ] ++ extra;
       };
       home = mkHome [ ];
+      screens = builtins.filter (p: (p.pname or "") == "screen") home.config.home.packages;
     in
     {
       homeConfigurations.coder = home;
@@ -42,15 +43,22 @@
         '';
         # starship's palette is 24-bit; screen 4.x renders 38;2;r;g;b as dim
         screen-truecolor =
-          let
-            screens = builtins.filter (p: (p.pname or "") == "screen") home.config.home.packages;
-            ok = screens != [ ] && builtins.all (p: nixpkgs.lib.versionAtLeast p.version "5") screens;
-          in
+          let ok = screens != [ ] && builtins.all (p: nixpkgs.lib.versionAtLeast p.version "5") screens; in
           pkgs.runCommand "screen-truecolor" { } ''
             ${if ok then "" else ''echo "home.packages lacks screen >= 5" >&2; exit 1''}
             grep -q '^truecolor on' ${home.config.home.file.".screenrc".source}
             touch $out
           '';
+        # Ubuntu's /etc/screenrc uses 4.x-only commands (deflogin, login) that screen 5 rejects
+        screen-ignores-etc-screenrc = pkgs.runCommand "screen-ignores-etc-screenrc" { } ''
+          for s in ${toString screens}; do
+            if grep -aq /etc/screenrc $s/bin/screen; then
+              echo "$s reads /etc/screenrc" >&2
+              exit 1
+            fi
+          done
+          touch $out
+        '';
         zellij-autostart-opt-in =
           let optIn = mkHome [ { setup.zellijAutostart = true; } ]; in
           pkgs.runCommand "zellij-autostart-opt-in" { } ''
