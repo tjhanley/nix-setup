@@ -87,17 +87,22 @@ if command -v zoxide >/dev/null 2>&1; then
 fi
 
 # FZF
-if command -v fzf >/dev/null 2>&1; then
+# apt's fzf (0.44, no --zsh) can shadow the nix one on PATH, so call the nix
+# binary directly
+_fzf="$HOME/.nix-profile/bin/fzf"
+[[ -x $_fzf ]] || _fzf=$(command -v fzf)
+if [[ -n $_fzf ]]; then
   # fzf >= 0.57 builds ctrl-r from zsh's $history parameter, which omits
   # commands imported from other sessions via share_history; disabling the
   # perl branch forces the fc-based fallback, which includes them
-  source <(fzf --zsh | sed 's/(( ${+commands\[perl\]} ))/false/')
+  source <($_fzf --zsh | sed 's/(( ${+commands\[perl\]} ))/false/')
   export FZF_DEFAULT_OPTS=" \
     --color=bg+:#313244,bg:#1E1E2E,spinner:#F5E0DC,hl:#F38BA8 \
     --color=fg:#CDD6F4,header:#F38BA8,info:#CBA6F7,pointer:#F5E0DC \
     --color=marker:#B4BEFE,fg+:#CDD6F4,prompt:#CBA6F7,hl+:#F38BA8 \
     --color=selected-bg:#45475A \
     --color=border:#6C7086,label:#CDD6F4"
+  unset _fzf
 fi
 
 # Git aliases (OMZ-style)
