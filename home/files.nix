@@ -12,6 +12,7 @@
   };
 
   home.file.".ripgreprc".source = ../config/ripgrep/ripgreprc;
+  home.file.".screenrc".source = ../config/screen/screenrc;
 
   programs.bat = {
     enable = true;

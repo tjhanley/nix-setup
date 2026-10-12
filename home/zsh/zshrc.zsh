@@ -197,8 +197,11 @@ alias awsdevx='aws sso login --profile devx-platform-dev'
 # Apply this repo to the host
 hms() { home-manager switch --flake "${NIX_SETUP_DIR:-$HOME/Workspace/nix-setup}#coder" "$@"; }
 
-# Carried over from ~/.bashrc
-export TERM=xterm-256color
+# Carried over from ~/.bashrc; screen/tmux must keep their own TERM
+case "$TERM" in
+  screen*|tmux*) ;;
+  *) export TERM=xterm-256color ;;
+esac
 
 # Bare `claude` in a terminal runs the session-intake step first (claude-kb)
 claude() {

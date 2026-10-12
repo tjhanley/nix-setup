@@ -31,6 +31,15 @@
           fi
           touch $out
         '';
+        # screen sets TERM=screen*; forcing xterm-256color there breaks prompt and colors
+        term-not-forced-in-screen = pkgs.runCommand "term-not-forced-in-screen" { } ''
+          if grep -qE '^export TERM=' ${pkgs.writeText "zshrc" home.config.programs.zsh.initContent}; then
+            echo "zshrc exports TERM unconditionally" >&2
+            exit 1
+          fi
+          grep -q '^term screen-256color' ${home.config.home.file.".screenrc".source}
+          touch $out
+        '';
         zellij-autostart-opt-in =
           let optIn = mkHome [ { setup.zellijAutostart = true; } ]; in
           pkgs.runCommand "zellij-autostart-opt-in" { } ''
