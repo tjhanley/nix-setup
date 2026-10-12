@@ -5,7 +5,7 @@
     "eza/theme.yml".source = ../config/eza/theme.yml;
     "lazygit/config.yml".source = ../config/lazygit/config.yml;
     "yazi/theme.toml".source = ../config/yazi/theme.toml;
-    "yazi/Catppuccin-mocha.tmTheme".source = ../config/yazi/Catppuccin-mocha.tmTheme;
+    "yazi/Catppuccin-latte.tmTheme".source = ../config/yazi/Catppuccin-latte.tmTheme;
     "mise/config.toml".source = ../config/mise/config.toml;
     "zellij/config.kdl".source = ../config/zellij/config.kdl;
     "git/ignore".source = ../config/git/ignore;
@@ -17,18 +17,18 @@
   programs.bat = {
     enable = true;
     config = {
-      theme = "Catppuccin Mocha";
+      theme = "Catppuccin Latte";
       style = "numbers,changes,header";
       italic-text = "always";
     };
-    themes."Catppuccin Mocha" = {
+    themes."Catppuccin Latte" = {
       src = pkgs.fetchFromGitHub {
         owner = "catppuccin";
         repo = "bat";
         rev = "6810349b28055dce54076712fc05fc68da4b8ec0";
         hash = "sha256-lJapSgRVENTrbmpVyn+UQabC9fpV1G1e+CdlJ090uvg=";
       };
-      file = "themes/Catppuccin Mocha.tmTheme";
+      file = "themes/Catppuccin Latte.tmTheme";
     };
   };
 }

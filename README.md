@@ -2,7 +2,7 @@
 
 Nix + home-manager setup for Linux hosts, the counterpart of
 [mac-setup](https://github.com/tjhanley/mac-setup). Same shell, prompt, git and
-CLI tooling, same Catppuccin Mocha theming, declared in a flake instead of
+CLI tooling, same Catppuccin Latte theming, declared in a flake instead of
 Homebrew + Stow.
 
 Target: `coder@x86_64-linux` (Ubuntu VM host). Login shell stays bash; interactive
@@ -56,7 +56,7 @@ config/                 vendored app configs (starship, eza, lazygit, yazi, mise
 | `stow/zsh/.zshrc` | `home/zsh/zshrc.zsh` + `home/zsh.nix` |
 | `stow/git/.gitconfig` | `home/git.nix` |
 | stow packages bat, eza, lazygit, ripgrep, starship, yazi, mise | `home/files.nix` + `config/` |
-| `stow/zellij` | minimal `config/zellij/config.kdl` (built-in `catppuccin-mocha`) |
+| `stow/zellij` | minimal `config/zellij/config.kdl` (built-in `catppuccin-latte`) |
 | `~/.mac-setup.local` feature flags | Nix options under `setup.*` |
 | `~/.bashrc` TERM export and `claude` intake wrapper | `home/zsh/zshrc.zsh` (TERM is left alone inside screen/tmux) |
 | (host only) GNU screen settings | `screen` 5.x in `home/packages.nix` + `config/screen/screenrc` -> `~/.screenrc` (UTF-8, `screen-256color`, `truecolor on`, `defbce`). The system `/usr/bin/screen` 4.x has no 24-bit color and its sessions live in `/run/screen`; the Nix screen uses `~/.screen`. The Nix screen is built to skip `/etc/screenrc` (Ubuntu's uses 4.x-only commands); its still-valid defaults (safety key unbinds, `defnonblock`, title hardstatus) are carried in `~/.screenrc` |

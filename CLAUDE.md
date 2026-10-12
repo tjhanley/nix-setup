@@ -8,5 +8,5 @@ Nix flake + home-manager for the Linux VM host; counterpart of `~/Workspace/mac-
   (new files must be `git add`ed or the flake cannot see them).
 - Never auto-start zellij by default: `setup.zellijAutostart` stays `false`; keep the flake checks that enforce it.
 - No secrets or git identity in the repo (`~/.gitconfig.local`, `~/.secrets`).
-- Theme: Catppuccin Mocha. No emojis in code or docs.
+- Theme: Catppuccin Latte. No emojis in code or docs.
 - GitHub: `tjhanley` personal account (`gh auth switch --user tjhanley`).
