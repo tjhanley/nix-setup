@@ -59,7 +59,7 @@ config/                 vendored app configs (starship, eza, lazygit, yazi, mise
 | `stow/zellij` | minimal `config/zellij/config.kdl` (built-in `catppuccin-mocha`) |
 | `~/.mac-setup.local` feature flags | Nix options under `setup.*` |
 | `~/.bashrc` TERM export and `claude` intake wrapper | `home/zsh/zshrc.zsh` (TERM is left alone inside screen/tmux) |
-| (host only) GNU screen settings | `config/screen/screenrc` -> `~/.screenrc` (UTF-8, `screen-256color`, `defbce`) |
+| (host only) GNU screen settings | `screen` 5.x in `home/packages.nix` + `config/screen/screenrc` -> `~/.screenrc` (UTF-8, `screen-256color`, `truecolor on`, `defbce`). The system `/usr/bin/screen` 4.x has no 24-bit color and its sessions live in `/run/screen`; the Nix screen uses `~/.screen` |
 
 Not ported (macOS-only or host-specific): ghostty, karabiner, skhd, zed, obsidian,
 ssh (1Password agent), the zjstatus bar and its macOS scripts, the zellij nav

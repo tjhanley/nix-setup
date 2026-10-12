@@ -40,6 +40,17 @@
           grep -q '^term screen-256color' ${home.config.home.file.".screenrc".source}
           touch $out
         '';
+        # starship's palette is 24-bit; screen 4.x renders 38;2;r;g;b as dim
+        screen-truecolor =
+          let
+            screens = builtins.filter (p: (p.pname or "") == "screen") home.config.home.packages;
+            ok = screens != [ ] && builtins.all (p: nixpkgs.lib.versionAtLeast p.version "5") screens;
+          in
+          pkgs.runCommand "screen-truecolor" { } ''
+            ${if ok then "" else ''echo "home.packages lacks screen >= 5" >&2; exit 1''}
+            grep -q '^truecolor on' ${home.config.home.file.".screenrc".source}
+            touch $out
+          '';
         zellij-autostart-opt-in =
           let optIn = mkHome [ { setup.zellijAutostart = true; } ]; in
           pkgs.runCommand "zellij-autostart-opt-in" { } ''

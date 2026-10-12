@@ -31,6 +31,7 @@
 
     # Editor and terminal
     neovim
+    screen
     tree-sitter
     zellij
 
