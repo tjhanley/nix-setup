@@ -55,7 +55,9 @@ config/                 vendored app configs (starship, eza, lazygit, yazi, mise
 stats, `/tui:*` slash commands) is built from a pinned release in `home/claude-tui.nix`.
 The `claudetui` wrapper runs under Nix `python313`, because claude-tui needs Python 3.13+
 and the host `python3` is 3.12. The `/tui:*` commands are linked to
-`~/.claude/commands/tui`.
+`~/.claude/commands/tui`. If a previous `install.sh` run left `~/.claude/commands/tui`
+as a symlink or directory, `home-manager -b bak` cannot back it up; remove it once
+before the first switch (`rm ~/.claude/commands/tui` for a symlink).
 
 `~/.claude/settings.json` is mutable state and is not managed here. Its `statusLine` and
 hooks call `claudetui` from `PATH`; configure them once with `claudetui setup` (or edit
