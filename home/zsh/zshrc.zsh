@@ -352,6 +352,15 @@ autoload -Uz add-zsh-hook
 add-zsh-hook chpwd _gh_set_token
 _gh_set_token
 
+# `gh auth ...` refuses to manage stored credentials while GH_TOKEN is set.
+gh() {
+  if [[ $1 == auth ]]; then
+    ( unset GH_TOKEN; command gh "$@" )
+  else
+    command gh "$@"
+  fi
+}
+
 # Claude Code metering
 if [ -f "$HOME/.claude/revenium.env" ]; then
     source "$HOME/.claude/revenium.env"

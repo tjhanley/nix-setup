@@ -70,6 +70,14 @@ Neovim is installed but unconfigured.
 Host-specific state stays out of the repo: git identity in `~/.gitconfig.local`
 (the existing `~/.gitconfig` keeps working), secrets in `~/.secrets`.
 
+## GitHub identity
+
+The zshrc exports `GH_TOKEN` per directory (git config `gh.user`, then the remote
+owner, then a path default) so `gh` and git use the right account regardless of
+`gh auth switch` state. `GH_TOKEN` makes `gh auth refresh|login|switch|logout`
+refuse to run, so a `gh` shell function drops it for `gh auth ...` only; those
+commands act on the stored login. Re-export happens on the next `cd` or new shell.
+
 ## Development
 
 ```sh
