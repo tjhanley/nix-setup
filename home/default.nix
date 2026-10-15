@@ -5,6 +5,7 @@
     ./zsh.nix
     ./git.nix
     ./files.nix
+    ./claude-tui.nix
     ./shell-handoff.nix
   ];
 
