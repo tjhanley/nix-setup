@@ -59,6 +59,12 @@
           done
           touch $out
         '';
+        # GH_TOKEN (exported per directory) makes `gh auth refresh|login|switch` refuse to run
+        gh-auth-ignores-token-hook = pkgs.runCommand "gh-auth-ignores-token-hook" { } ''
+          grep -qE '^gh\(\) \{' ${pkgs.writeText "zshrc" home.config.programs.zsh.initContent}
+          grep -qE 'unset GH_TOKEN; command gh "\$@"' ${pkgs.writeText "zshrc" home.config.programs.zsh.initContent}
+          touch $out
+        '';
         zellij-autostart-opt-in =
           let optIn = mkHome [ { setup.zellijAutostart = true; } ]; in
           pkgs.runCommand "zellij-autostart-opt-in" { } ''
