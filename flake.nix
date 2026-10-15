@@ -19,6 +19,7 @@
       };
       home = mkHome [ ];
       screens = builtins.filter (p: (p.pname or "") == "screen") home.config.home.packages;
+      claudeTuis = builtins.filter (p: (p.pname or "") == "claude-tui") home.config.home.packages;
     in
     {
       homeConfigurations.coder = home;
@@ -65,6 +66,18 @@
           grep -qE 'unset GH_TOKEN; command gh "\$@"' ${pkgs.writeText "zshrc" home.config.programs.zsh.initContent}
           touch $out
         '';
+        # claudetui needs Python >= 3.13 (host python3 is 3.12); the wrapper must pin a Nix interpreter
+        claude-tui-pinned-python =
+          let ok = builtins.length claudeTuis == 1; in
+          pkgs.runCommand "claude-tui-pinned-python" { } ''
+            ${if ok then "" else ''echo "home.packages lacks exactly one claude-tui" >&2; exit 1''}
+            for p in ${toString claudeTuis}; do
+              grep -q 'python3-3\.1[3-9]' $p/bin/claudetui
+              $p/bin/claudetui --version
+            done
+            test -d ${home.config.home.file.".claude/commands/tui".source}
+            touch $out
+          '';
         zellij-autostart-opt-in =
           let optIn = mkHome [ { setup.zellijAutostart = true; } ]; in
           pkgs.runCommand "zellij-autostart-opt-in" { } ''

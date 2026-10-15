@@ -44,9 +44,25 @@ home/
   zsh/zshrc.zsh         the zshrc, adapted from mac-setup
   git.nix               git config (identity stays in ~/.gitconfig.local)
   files.nix             config files linked into ~/.config, bat theme
+  claude-tui.nix        claudetui (slima4/claude-tui) pinned to a release, plus ~/.claude/commands/tui
   shell-handoff.nix     bash -> zsh handoff
 config/                 vendored app configs (starship, eza, lazygit, yazi, mise, zellij, ripgrep, git ignore)
 ```
+
+## claude-tui
+
+[claude-tui](https://github.com/slima4/claude-tui) (statusline, live monitor, session
+stats, `/tui:*` slash commands) is built from a pinned release in `home/claude-tui.nix`.
+The `claudetui` wrapper runs under Nix `python313`, because claude-tui needs Python 3.13+
+and the host `python3` is 3.12. The `/tui:*` commands are linked to
+`~/.claude/commands/tui`. If a previous `install.sh` run left `~/.claude/commands/tui`
+as a symlink or directory, `home-manager -b bak` cannot back it up; remove it once
+before the first switch (`rm ~/.claude/commands/tui` for a symlink).
+
+`~/.claude/settings.json` is mutable state and is not managed here. Its `statusLine` and
+hooks call `claudetui` from `PATH`; configure them once with `claudetui setup` (or edit
+by hand) and switch styles with `claudetui mode full|compact|custom`. To upgrade, bump
+`version` and `hash` in `home/claude-tui.nix`.
 
 ## mac-setup mapping
 
